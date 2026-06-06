@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин Обуви</title>
+    <!-- Подключаем официальный скрипт Telegram WebApp API -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Каталог обуви</h2>
+        
+        <!-- Карточка товара -->
+        <div class="shoe-card" id="product-1">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" alt="Кроссовки" class="shoe-img">
+            <div class="shoe-info">
+                <h3 class="shoe-title">Спортивные кроссовки RunFast</h3>
+                <p class="shoe-price">180 BYN</p>
+                
+                <p class="label">Выберите размер:</p>
+                <div class="size-selector">
+                    <button class="size-btn" onclick="selectSize(this, 40)">40</button>
+                    <button class="size-btn" onclick="selectSize(this, 41)">41</button>
+                    <button class="size-btn" onclick="selectSize(this, 42)">42</button>
+                    <!-- Пример отсутствующего размера -->
+                    <button class="size-btn disabled" disabled>43</button> 
+                    <button class="size-btn" onclick="selectSize(this, 44)">44</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="order-btn" id="main-action-btn" onclick="sendOrder()">Оформить заказ</button>
+    </div>
+
+    <script>
+        // Инициализируем Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Расширяем приложение на весь экран
+
+        let selectedSize = null;
+        const productInfo = {
+            item: "Спортивные кроссовки RunFast",
+            price: 180
+        };
+
+        function selectSize(element, size) {
+            // Снимаем выделение со всех кнопок
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс текущей
+            element.classList.add('active');
+            selectedSize = size;
+        }
+
+        function sendOrder() {
+            if (!selectedSize) {
+                alert("Пожалуйста, выберите размер обуви перед заказом!");
+                return;
+            }
+
+            // Формируем данные заказа
+            const data = {
+                item: productInfo.item,
+                price: productInfo.price,
+                size: selectedSize
+            };
+
+            // Отправляем данные обратно боту в Telegram
+            tg.sendData(json.stringify(data));
+            tg.close(); // Закрываем Mini App после отправки
+        }
+    </script>
+</body>
+</html>
